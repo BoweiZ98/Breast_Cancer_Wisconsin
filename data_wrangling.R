@@ -18,7 +18,8 @@ head(df_raw)
 
 # Change Class to categorical variable
 df = df_raw %>%
-  mutate(Class = as.factor(Class))
+  mutate(Class = if_else(Class == 2, 0, 1)) %>%
+  select(-id)
 
 # Check Missing value
 colSums(is.na(df_raw))
