@@ -23,6 +23,7 @@ df = df_raw %>%
 
 # Check Missing value
 colSums(is.na(df_raw))
+md.pattern(df)
 
 # Missing value
 df_inputed = mice(df,
@@ -32,6 +33,14 @@ df_inputed = mice(df,
                   seed = 1)
 df_complete = complete(df_inputed,1)
 colSums(is.na(df_complete))
+
+# Dist. of df_complete
+df_complete %>%
+  keep(is.numeric) %>%
+  gather %>%
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_histogram()
 
 # Train/Validation Split
 set.seed(2023)
