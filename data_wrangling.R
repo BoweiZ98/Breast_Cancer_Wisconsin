@@ -21,6 +21,14 @@ df = df_raw %>%
   mutate(Class = if_else(Class == 2, 0, 1)) %>%
   select(-id)
 
+# Dist. of df
+df %>%
+  keep(is.numeric) %>%
+  gather %>%
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_histogram()
+
 # Check Missing value
 colSums(is.na(df_raw))
 md.pattern(df)
