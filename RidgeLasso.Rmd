@@ -1,0 +1,55 @@
+---
+title: "BreastCancer_Ridge_LASSO"
+output: pdf_document
+date: "2023-11-30"
+---
+
+```{r}
+library(MASS)
+library(class)
+library(tidyverse)
+library(caret)
+library(car)
+
+train = read.csv("/Users/yijiaxue/Downloads/train.csv")
+Val = read.csv("/Users/yijiaxue/Downloads/val.csv")
+xnams = dput(colnames(train)[colnames(train) != "Class"])
+
+# test set
+t.xxx <- as.matrix(train[,xnams])
+t.yyy <- train$Class
+
+# validation set
+v.xxx<-as.matrix(Val[,xnams])
+v.yyy<-Val$Class
+
+
+gridd <- exp(seq(2,-6,-0.5))  ##lambda values
+
+# fit Ridge and Lasso
+rdgTR.fit <- glmnet(t.xxx,t.yyy,family="binomial",alpha=0,lambda=gridd)
+lsoTR.fit <- glmnet(t.xxx,t.yyy,family="binomial",alpha=1,lambda=gridd)
+
+# 10 fold CV to choose optimal lambda
+cv.rdgeg <- cv.glmnet(t.xxx,t.yyy,family="binomial",alpha=0,lambda=gridd,nfolds=10)
+cv.lsoeg <- cv.glmnet(t.xxx,t.yyy,family="binomial",alpha=1,lambda=gridd,nfolds=10)
+
+## apply to validation with optimal lambda
+rdg.TST <- predict(rdgTR.fit, s=cv.rdgeg$lambda.1se, newx=v.xxx,type="class")
+rdg.TST
+
+lso.TST <- predict(lsoTR.fit, s=cv.lsoeg$lambda.1se, newx=v.xxx,type="class")
+lso.TST
+
+# calculate accuracy
+rdg_conf_matrix = confusionMatrix(data = as.factor(rdg.TST),
+                                   reference = as.factor(Val[,"Class"]))
+print(rdg_conf_matrix) # Ridge:0.9643(0.9186, 0.9883)
+
+
+lso_conf_matrix = confusionMatrix(data = as.factor(lso.TST),
+                                   reference = as.factor(Val[,"Class"]))
+print(lso_conf_matrix) # Ridge:0.9643(0.9186, 0.9883)
+
+```
+
