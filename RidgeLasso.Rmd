@@ -10,9 +10,10 @@ library(class)
 library(tidyverse)
 library(caret)
 library(car)
+library(glmnet)
 
-train = read.csv("/Users/yijiaxue/Downloads/train.csv")
-Val = read.csv("/Users/yijiaxue/Downloads/val.csv")
+train = read.csv("datasets/train.csv")
+Val = read.csv("datasets/val.csv")
 xnams = dput(colnames(train)[colnames(train) != "Class"])
 
 # test set
@@ -33,6 +34,9 @@ lsoTR.fit <- glmnet(t.xxx,t.yyy,family="binomial",alpha=1,lambda=gridd)
 # 10 fold CV to choose optimal lambda
 cv.rdgeg <- cv.glmnet(t.xxx,t.yyy,family="binomial",alpha=0,lambda=gridd,nfolds=10)
 cv.lsoeg <- cv.glmnet(t.xxx,t.yyy,family="binomial",alpha=1,lambda=gridd,nfolds=10)
+par(mfrow = c(1,2))
+plot(cv.rdgeg, main = "Ridge Regression")
+plot(cv.lsoeg, main = "LASSO Regression")
 
 ## apply to validation with optimal lambda
 rdg.TST <- predict(rdgTR.fit, s=cv.rdgeg$lambda.1se, newx=v.xxx,type="class")
