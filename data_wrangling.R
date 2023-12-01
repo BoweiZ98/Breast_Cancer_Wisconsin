@@ -1,6 +1,8 @@
 Sys.setLanguage(lang = "en")
 library(mice)
 library(tidyverse)
+# install.packages("gtsummary")
+library(gtsummary)
 
 # Data import
 colnames = c("id", "Clump_Thickness", "Uniformity_of_Cell_Size",
@@ -18,7 +20,7 @@ head(df_raw)
 
 # Change Class to categorical variable
 df = df_raw %>%
-  mutate(Class = if_else(Class == 2, 0, 1)) %>%
+  mutate(Class = as.factor(if_else(Class == 2, 0, 1))) %>%
   select(-id)
 
 # Dist. of df
@@ -28,6 +30,9 @@ df %>%
   ggplot(aes(value)) +
   facet_wrap(~ key, scales = "free") +
   geom_histogram()
+
+# Summary table
+df %>% tbl_summary(b = Class)
 
 # Check Missing value
 colSums(is.na(df_raw))
@@ -50,12 +55,19 @@ df_complete %>%
   facet_wrap(~ key, scales = "free") +
   geom_histogram()
 
+# Summary Table After imputation
+df_complete %>% tbl_summary(b = Class)
+
 # Train/Validation Split
 set.seed(2023)
 n = nrow(df_complete)
 ind = sample(n, 0.8 * n, F)
 train = df_complete[ind,]
 val = df_complete[-ind,]
+
+# Summary table
+train %>% tbl_summary(b = Class)
+val %>% tbl_summary(b = Class)
 
 # Write out
 write.csv(train,
