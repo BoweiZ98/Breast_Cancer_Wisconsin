@@ -41,6 +41,10 @@ for (k in 1:10){
 
 table.accuracy # k = 5
 
+# plot accuracy vs. k
+with(table.accuracy, plot(k, accuracy, type = 'l',
+                          main = "Accuracy vs. k with CV5"))
+
 #### Apply to Validation ####
 
 knn.5 = knn(train = Train[,xnams],
