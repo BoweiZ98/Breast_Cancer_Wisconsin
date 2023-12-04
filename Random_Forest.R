@@ -29,4 +29,4 @@ rf.pred = if_else(
 ###### Confusion Matrix ######
 rf_conf_matrix = confusionMatrix(data = as.factor(rf.pred),
                                   reference = as.factor(val[,"Class"]))
-print(rf_conf_matrix) #0.9786 (0.9387, 0.9956)
+print(rf_conf_matrix) # 0.9786 (0.9387, 0.9956)
