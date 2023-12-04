@@ -8,7 +8,7 @@ library(car)
 
 Train = read.csv("datasets/train.csv")
 Val = read.csv("datasets/val.csv")
-xnams = dput(colnames(train)[colnames(train) != "Class"])
+xnams = dput(colnames(Train)[colnames(Train) != "Class"])
 
 ###### KNN ######
 
