@@ -1,10 +1,10 @@
 library(tidyverse)
 
 data <- data.frame(
-  Method = c("LDA", "QDA", "LASSO", "Rdige", "5NN", "Random Forest"),
-  Accuracy = c(0.9643, 0.9571,0.9643, 0.9643, 0.9786, 0.9786),
-  Upper_CI = c(0.9186, 0.9091,0.9186, 0.9186, 0.9387, 0.9387),
-  Lower_CI = c(0.9883, 0.9841, 0.9883, 0.9883, 0.9956, 0.9956)
+  Method = c("Logistic Regression", "LASSO", "Rdige", "5NN", "Random Forest"),
+  Accuracy = c(0.9714,0.9643, 0.9643, 0.9786, 0.9786),
+  Upper_CI = c(0.9285,0.9186, 0.9186, 0.9387, 0.9387),
+  Lower_CI = c(0.9922, 0.9883, 0.9883, 0.9956, 0.9956)
 )
 
 ggplot(data, aes(x = Method, y = Accuracy)) +

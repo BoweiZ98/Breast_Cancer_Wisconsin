@@ -18,34 +18,14 @@ fit.logi = glm(formula = fml,
                family = "binomial")
 summary(fit.logi)
 
-###### Logistic Regression with Bootstrap ######
+logi.pred = predict(fit.logi,
+                   newdata = val,
+                    type = "response")
+logi.pred.y = if_else(logi.pred >= 0.5,
+                     1, 
+                     0)
 
-B = 1000; n = nrow(train)
-coef.boot <- matrix(0, B, 10)
-
-set.seed(2023)
-for (b in 1:B){
-  ind = sample(n, n, T)
-  sample = train[ind,]
-  fit.boot = glm(formula = fml,
-                 data = sample,
-                 family = "binomial")
-  coef.boot[b,] = fit.boot$coefficients
-}
-
-colnames(coef.boot) = c("intecept", xnams)
-head(coef.boot)
-
-# SE
-getSE = function(v){
-  sd(v)/sqrt(length(v))
-}
-se = apply(coef.boot, 2, getSE)
-
-# Calculate new z-statistics and p-value
-
-coef.table = summary(fit.logi)$coefficients
-coef.table[,1] = colMeans(coef.boot)
-coef.table[,2] = se
-coef.table[,3] = coef.table[,1]/coef.table[,2]
-coef.table[,4] = 2*(1-pnorm(coef.table[,3]))
+# Confusion Matrix
+logi_conf_matrix = confusionMatrix(data = as.factor(logi.pred.y),
+                                  reference = as.factor(val$Class))
+print(logi_conf_matrix) # Accuracy = 0.9714 (0.9285, 0.9922)
